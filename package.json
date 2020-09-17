@@ -1,0 +1,17 @@
+{
+  "name": "mini-browser",
+  "version": "1.0.0",
+  "description": "Mini browser plugin for AdoPiSoft Hotspot. Use to remotely access local computers reachable by pisowifi machine",
+  "main": "-",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "git@bitbucket.org:adopisowifi/mini-browser-plugin.git"
+  ],
+  "author": "arnel.lenteria@gmail.com",
+  "license": "ISC",
+  "dependencies": {
+    "express-http-proxy": "^1.6.2"
+  }
+}

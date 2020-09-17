@@ -1,0 +1,39 @@
+<div class="row">
+  <div class="col-md-12">
+    <div
+      ba-panel
+      ba-panel-title="Mini Browser"
+      ba-panel-class="with-scroll"
+      class="mini-browser-plugin"
+      >
+      <p>Access your router or modem dashboard remotely.</p>
+      <form name='form' ng-submit="open(url)">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label>
+                Enter URL:
+              </label>
+              <input type="url" ng-disabled="browser && !browser.closed" ngf-patter="/^[A-Za-z][A-Za-z\d.+-]*:\/*(?:\w+(?::\w+)?@)?[^\s/]+(?::\d+)?(?:\/[\w#!:.?+=&%@\-/]*)?$/" class="form-control" required ng-model="$parent.url" autocomplete="on" placeholder="http://192.168.1.1" />
+            </div>
+          </div>
+        </div>
+        <button type="submit" ng-disabled="form.$invalid" class="btn btn-primary">
+          <i class="glyphicon glyphicon-globe" style="padding-right:4px"></i>
+          Open
+        </button>
+      </form>
+      <hr/>
+      <p>
+        <h4>To end mini-browser session, just click the button below:</h4>
+      </p>
+      <button ng-click="close()" class="btn btn-danger">End Session</button>
+      <!-- <br/>
+      <p>
+        or you can directly access the url
+        <a ng-href="{{exit_url}}" target="_blank">{{exit_url}}</a>
+        if you accidentally close this page.
+      </p> -->
+    </div>
+  </div>
+</div>
