@@ -22,7 +22,9 @@ function setupProxy(url_str){
         ref_url = new URL(originalReq.headers.referer)
         ref_url.host = url.host
         ref_url.protocol = url.protocol
-        ref_url.port = url.port
+        ref_url.port = ''
+        if(url.port != '80')
+          ref_url.port = url.port
 
         proxyReqOpts.rejectUnauthorized = false
         proxyReqOpts.headers.referer = ref_url.href
@@ -51,23 +53,28 @@ router.get('/open-mini-browser', (req, res, next)=>{
 router.use((req, res, next)=>{
   req.headers = req.headers || {}
   var is_mini_browser = (req.headers.cookie||"").match(/mini_browser\=true/ig)
-  var host_url = req.query.url
+  if(!is_mini_browser)
+    return next();
 
-  if(is_mini_browser && (host_url || proxy )){
-    // if(ip_regx.test(req.headers.host))
-    //   return next();
+  if(!proxy){
+    var host_url = req.query.url
+    console.log("Fox was here", req.headers)
+    if(!host_url && req.headers.referer){
+      var matches = req.headers.referer.match(/\?url\=(.*)/) || []
+      console.log(matches)
+      host_url = matches[1]
+    }
 
-    if(!proxy)
-      proxy = setupProxy(host_url)
+    if(host_url) proxy = setupProxy(host_url);
+  }
 
-    if(!proxy) return next();
+  if(!proxy)
+    return next();
 
-    res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
-    res.header('Expires', '-1');
-    res.header('Pragma', 'no-cache');
-    return proxy(req, res, next)
-  }else
-    return next()
+  res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+  res.header('Expires', '-1');
+  res.header('Pragma', 'no-cache');
+  return proxy(req, res, next)
 });
 
 module.exports = router
