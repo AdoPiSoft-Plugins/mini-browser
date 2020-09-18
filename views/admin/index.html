@@ -17,6 +17,9 @@
               <input type="url" ng-disabled="browser && !browser.closed" ngf-patter="/^[A-Za-z][A-Za-z\d.+-]*:\/*(?:\w+(?::\w+)?@)?[^\s/]+(?::\d+)?(?:\/[\w#!:.?+=&%@\-/]*)?$/" class="form-control" required ng-model="$parent.url" autocomplete="on" placeholder="http://192.168.1.1" />
             </div>
           </div>
+          <div class="col-md-4">
+            <p class="bg-warning alert">NOTE: You can't access your admin while a mini browser session is active.</p>
+          </div>
         </div>
         <button type="submit" ng-disabled="form.$invalid" class="btn btn-primary">
           <i class="glyphicon glyphicon-globe" style="padding-right:4px"></i>
