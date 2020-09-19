@@ -16,6 +16,10 @@
               </label>
               <input type="url" ng-disabled="browser && !browser.closed" ngf-patter="/^[A-Za-z][A-Za-z\d.+-]*:\/*(?:\w+(?::\w+)?@)?[^\s/]+(?::\d+)?(?:\/[\w#!:.?+=&%@\-/]*)?$/" class="form-control" required ng-model="$parent.url" autocomplete="on" placeholder="http://192.168.1.1" />
             </div>
+            <button type="submit" ng-disabled="form.$invalid" class="btn btn-primary">
+              <i class="glyphicon glyphicon-globe" style="padding-right:4px"></i>
+              Open
+            </button>
           </div>
           <div class="col-md-4">
             <p class="bg-warning alert">
@@ -24,10 +28,6 @@
             </p>
           </div>
         </div>
-        <button type="submit" ng-disabled="form.$invalid" class="btn btn-primary">
-          <i class="glyphicon glyphicon-globe" style="padding-right:4px"></i>
-          Open
-        </button>
       </form>
       <hr/>
       <p>
