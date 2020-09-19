@@ -40,7 +40,11 @@ function setupProxy(url_str){
 }
 
 router.get('/exit-mini-browser', (req, res, next)=>{
-  // if(ip_regx.test(req.headers.host)) return next();
+  req.headers = req.headers || {}
+  var is_mini_browser = (req.headers.cookie||"").match(/mini_browser\=true/ig)
+  if(!is_mini_browser)
+    return next();
+
   proxy = null
   return res.send(`<html><head><script>document.cookie = "mini_browser=; Max-Age=0;path=/";window.location.href = "/";</script></head><body></body></html>`)
 })
@@ -58,7 +62,6 @@ router.use((req, res, next)=>{
 
   if(!proxy){
     var host_url = req.query.url
-    console.log("Fox was here", req.headers)
     if(!host_url && req.headers.referer){
       var matches = req.headers.referer.match(/\?url\=(.*)/) || []
       console.log(matches)
