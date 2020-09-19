@@ -78,11 +78,6 @@ function setupProxy(url_str){
 }
 
 router.get('/exit-mini-browser', (req, res, next)=>{
-  req.headers = req.headers || {}
-  var is_mini_browser = (req.headers.cookie||"").match(/mini_browser\=true/ig)
-  if(!is_mini_browser)
-    return next();
-
   proxy = null
   return res.send(`<html><head><script>document.cookie = "mini_browser=; Max-Age=0;path=/";window.location.href = "/";</script></head><body></body></html>`)
 })
