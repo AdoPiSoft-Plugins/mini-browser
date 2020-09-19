@@ -18,9 +18,6 @@
   ])
 
   App.controller('MiniBrowserPluginCtrl', function($scope, MiniBrowserService, toastr, CatchHttpError, $timeout, $ngConfirm){
-    var ip_regx = /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/
-    var domain_regx = /^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$/
-
     $scope.exit_url = window.location.origin+"/exit-mini-browser"
     $scope.browser;
     $scope.setDefaultUrl = function(){
