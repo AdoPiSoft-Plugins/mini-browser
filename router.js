@@ -11,10 +11,8 @@ function setupProxy(url_str){
     url = new URL(url_str)
   }catch(e){}
   if(!url) return
-
   proxy = httpProxy(url.host, {
-    limit: '50mb',
-    https: url.protocol == 'https',
+    https: !!url.protocol.match(/https/i),
     reqBodyEncoding: null,
     proxyReqOptDecorator: function(proxyReqOpts, originalReq) {
       var ref_url = {};
@@ -32,8 +30,48 @@ function setupProxy(url_str){
       proxyReqOpts.headers.origin = ref_url.origin || url.origin
       return proxyReqOpts;
     },
+    userResHeaderDecorator: function(headers, userReq, userRes, proxyReq, proxyRes){
+      userRes.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+      userRes.setHeader('Expires', '-1');
+      userRes.setHeader('Pragma', 'no-cache');
+      userRes.setHeader('x-frame-options', '');
+      headers["x-frame-options"] = ""
+      if(headers.location){
+        var loc = new URL(headers.location)
+        if(loc.protocol != url.protocol){
+          proxy = setupProxy(loc.toString())
+        }
+
+        loc.host = userReq.headers.host
+        loc.protocol = "http"
+        headers.location = loc.toString()
+      }
+      return headers
+    },
+    userResDecorator: function(proxyRes, proxyResData, userReq, userRes){
+      delete process.env.NODE_TLS_REJECT_UNAUTHORIZED
+      return proxyResData
+    },
     proxyErrorHandler: function(err, res, next) {
-      next(err)
+      delete process.env.NODE_TLS_REJECT_UNAUTHORIZED
+      res.send(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, user-scalable=no">
+          <title>Something went wrong!</title>
+        </head>
+        <body style="padding:50px;line-height:30px;background: #eee;">
+          <center><h1>Ooops!&nbsp;&nbsp;</h1>
+          <h2>Something went wrong.</h2>
+          <h2>The local url you want to access is probably inaccessable by your machine.</h2>
+          <h2>Or prabably just a browser issue, please try other browsers.</h2>
+          <a href="/exit-mini-browser">Exit Mini Browser Session</a>
+          </center>
+        </body>
+      </html>
+    `)
     }
   });
   return proxy
@@ -55,29 +93,30 @@ router.get('/open-mini-browser', (req, res, next)=>{
 })
 
 router.use((req, res, next)=>{
-  req.headers = req.headers || {}
-  var is_mini_browser = (req.headers.cookie||"").match(/mini_browser\=true/ig)
-  if(!is_mini_browser)
-    return next();
-
-  if(!proxy){
-    var host_url = req.query.url
-    if(!host_url && req.headers.referer){
-      var matches = req.headers.referer.match(/\?url\=(.*)/) || []
-      console.log(matches)
-      host_url = matches[1]
+  try{
+    req.headers = req.headers || {}
+    var is_mini_browser = (req.headers.cookie||"").match(/mini_browser\=true/ig)
+    if(!is_mini_browser)
+      return next();
+  
+    if(!proxy){
+      var host_url = req.query.url
+      if(!host_url && req.headers.referer){
+        var matches = req.headers.referer.match(/\?url\=(.*)/) || []
+        host_url = matches[1]
+      }
+  
+      if(host_url) proxy = setupProxy(host_url);
     }
+  
+    if(!proxy)
+      return next();
 
-    if(host_url) proxy = setupProxy(host_url);
+    process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0
+    return proxy(req, res, next)
+  }catch(e){
+    next()
   }
-
-  if(!proxy)
-    return next();
-
-  res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
-  res.header('Expires', '-1');
-  res.header('Pragma', 'no-cache');
-  return proxy(req, res, next)
 });
 
 module.exports = router

@@ -9,10 +9,10 @@
     '$q',
     function($http, toastr, CatchHttpError, $q) {
       this.open = function (url) {
-        return $http.get("/?url="+url).catch(CatchHttpError);
+        return $http.get("/?url="+url).catch(function(){});
       }
       this.close = function(){
-        return $http.get("/exit-mini-browser").catch(CatchHttpError);
+        return $http.get("/exit-mini-browser").catch(function(){});
       }
     }
   ])
@@ -25,20 +25,22 @@
         return $scope.browser.focus()
       }
       document.cookie = "mini_browser=true;path=/";
-      MiniBrowserService.open($scope.url).then(function(){
-        $scope.browser = window.open("/", '_blank');
+      var url = new URL($scope.url)
+      MiniBrowserService.open($scope.url).finally(function(){
+        $scope.browser = window.open(url.pathname, '_blank');
       })
     }
 
     $scope.close = function(){
       if(!confirm("Are you sure you want to close mini browser session?")) return;
-      document.cookie = "mini_browser=; Max-Age=0;path=/";
-      if($scope.browser){
-        $scope.browser.close()
-      }
-      $scope.browser = null
-      $scope.url = ""
-      return MiniBrowserService.close()
+      return MiniBrowserService.close().finally(function(){
+        document.cookie = "mini_browser=; Max-Age=0;path=/";
+        if($scope.browser){
+          $scope.browser.close()
+        }
+        $scope.browser = null
+        $scope.url = ""
+      })
     }
   })
 
