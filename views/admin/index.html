@@ -1,48 +1,57 @@
 <div class="row">
-  <div class="col-md-12">
+  <div class="col-md-5">
     <div
       ba-panel
       ba-panel-title="Mini Browser"
       ba-panel-class="with-scroll"
       class="mini-browser-plugin"
       >
-      <p>Access your router or modem dashboard remotely.</p>
       <form name='form' ng-submit="open(url)">
         <div class="row">
-          <div class="col-md-4">
-            <div class="form-group">
+          <div class="col-md-12">
+            <p>Access your router or modem dashboard remotely.</p>
+            <div class="form-group" ng-class="{'has-error': $parent.url && form.$dirty && form.$invalid}">
               <label>
                 Enter URL:
               </label>
-              <input type="url" ng-disabled="browser && !browser.closed" ngf-patter="/^[A-Za-z][A-Za-z\d.+-]*:\/*(?:\w+(?::\w+)?@)?[^\s/]+(?::\d+)?(?:\/[\w#!:.?+=&%@\-/]*)?$/" class="form-control" required ng-model="$parent.url" autocomplete="on" placeholder="http://192.168.1.1" />
-              <span class="help-block">This will open in new tab. If it will not automatically open, change your browser settings to allow popup.</span>
+              <input type="text" ng-disabled="browser && !browser.closed" ng-model-options="{allowInvalid: true}" ng-pattern="/^[A-Za-z][A-Za-z\d.+-]*:\/*(?:\w+(?::\w+)?@)?[^\s/]+(?::\d+)?(?:\/[\w#!:.?+=&%@\-/]*)?$/" class="form-control" required ng-model="$parent.url" ng-focus="setDefaultUrl()" ng-blur="formatUrl()" autocomplete="on" onfocus="el=this;setTimeout(function(){el.select()}, 80)" placeholder="http://192.168.1.1" />
+              <span class="help-block" ng-show="$parent.url && form.$invalid && form.$dirty">Enter a valid URL</span>
             </div>
-            <button type="submit" ng-disabled="form.$invalid" class="btn btn-primary">
-              <i class="glyphicon glyphicon-globe" style="padding-right:4px"></i>
-              Open
-            </button>
+            <div class="col-md-3" style="padding:0">
+              <button type="submit" ng-disabled="form.$invalid" class="btn btn-primary">
+                <i class="glyphicon glyphicon-globe" style="padding-right:4px"></i>
+                Open
+              </button>
+            </div>
+            <div class="col-md-9" style="padding:0">
+              <span class="help-block">Click this button to open a mini browser session in new tab. If it will not automatically open, change your browser settings to allow popup.</span>
+            </div>
             <br/>
             <br/>
-          </div>
-          <div class="col-md-8">
-            <p class="bg-warning alert">
-              Warning: You can't access your admin in this browser while a mini-browser session is active.
-              To forcefully exit mini-browser session, just clear your browser's cache and cookies.
-            </p>
           </div>
         </div>
       </form>
-      <hr/>
-      <p>
-        <h4>To end mini-browser session, just click the button below:</h4>
-      </p>
-      <button ng-click="close()" class="btn btn-danger">End Session</button>
-      <!-- <br/>
-      <p>
-        or you can directly access the url
-        <a ng-href="{{exit_url}}" target="_blank">{{exit_url}}</a>
-        if you accidentally close this page.
-      </p> -->
+
     </div>
   </div>
+
+  <div class="col-md-7">
+    <div
+      ba-panel
+      ba-panel-class="with-scroll"
+      >
+
+      <p class="bg-warning alert">
+        Warning: You can't access your admin in this browser while a mini-browser session is active.
+        To forcefully exit mini-browser session, click the button below or just clear your browser's cache and cookies.
+      </p>
+      <div class="col-md-2" style="padding:0">
+        <button type="button" ng-click="close()" class="btn btn-danger">End Session</button>
+      </div>
+      <div class="col-md-10" style="padding:6px">
+        <span class="help-block">
+          &nbsp;Click this button to exit mini-browser session.
+        </span>
+      </div>
+    </div>
 </div>
