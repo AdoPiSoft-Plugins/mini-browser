@@ -1,5 +1,5 @@
 'use strict';
-var { router, middlewares } = require('../core')
+var { router, middlewares } = require('plugin-core')
 var httpProxy = require('express-http-proxy')
 var ip_regx = /(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}/
 var proxy
