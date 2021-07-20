@@ -4,7 +4,8 @@
   "description": "Mini browser plugin for AdoPiSoft Hotspot. Use to remotely access local computers reachable by pisowifi machine",
   "main": "-",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "python $APPDIR/python-scripts/plugin-postinstall.py $(basename \"$PWD\") $(PWD)"
   },
   "keywords": [
     "git@bitbucket.org:adopisowifi/mini-browser-plugin.git"
