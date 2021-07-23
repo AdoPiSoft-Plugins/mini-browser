@@ -4,7 +4,7 @@
   .config(function($stateProvider) {
     $stateProvider
     .state('plugins.mini_browser', {
-      templateUrl : "/plugins/mini-browser/views/admin/index.html",
+      templateUrl : "/public/plugins/mini-browser/views/admin/index.html",
       controller: 'MiniBrowserPluginCtrl',
       url: '/mini-browser-plugin',
       title: 'Mini Browser'
