@@ -1,1 +1,2 @@
-"use strict";var router=require("./router");var{app}=require("plugin-core");module.exports={async init(){app.use(router)}};
+console.log('mini_browser_plugin_initilized')
+module.exports = require('./app')
